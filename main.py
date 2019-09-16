@@ -5,6 +5,7 @@ could be anywhere in the maze and cleaned up the code so it's easier to understa
 '''
 
 import queue
+import copy
 
 '''
 just to get the ol maze we wanna be solving
@@ -81,15 +82,34 @@ def checkEnd(maze, path):
     else:
         return False
 
+def checkOpposite(move, newmove):
+    if move == 'L':
+        if newmove == 'R':
+            return True
+    elif move == 'R':
+        if newmove == 'L':
+            return True
+    elif move == 'U':
+        if newmove == 'D':
+            return True
+    elif move == 'D':
+        if newmove == 'U':
+            return True
+    
+    return False
+
 # validate a potential path
 def validPath(maze, path):
     x, y = traverse(maze, path)
-    if not ( 0 <= x < len(maze[0]) and 0 <= y < len(maze)): # check the move is within the range of the maze
+    if not (0 <= x < len(maze[0]) and 0 <= y < len(maze)): # check the move is within the range of the maze
         return False
-    elif maze [y][x] == '1': # check if the move lands on a wall
+    elif maze[y][x] == '1': # check if the move lands on a wall
         return False
-    else:
-        return True
+    elif len(path) > 1:
+        if checkOpposite(path[-1], path[-2]): # make sure we're not going back on ourselves
+            return False
+
+    return True
 
 def main():
     paths = queue.Queue()
@@ -98,7 +118,7 @@ def main():
     maze = getMaze()
     printMaze(maze)
 
-    while not checkEnd(maze, path):
+    while not checkEnd(maze, path) and not paths.empty():
         path = paths.get()
         for j in ['L', 'R', 'U', 'D']:
             newpath = path + j
