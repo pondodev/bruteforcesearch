@@ -28,14 +28,6 @@ def traverse(maze, path):
 
     return (x, y)
 
-    for y in maze:
-        row = ''
-        for x in y:
-            if x == '1': row += '#'
-            elif x == '0': row += ' '
-            else: row += x
-        print(row)
-
 # see if we are at the end of the maze
 def checkEnd(maze, path):
     x, y = traverse(maze, path)
